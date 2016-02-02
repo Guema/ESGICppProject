@@ -1,6 +1,6 @@
 #include "Field.h"
 
-Field::Field(int dimx, int dimy)
+Field::Field(int dim_x, int dim_y)
 {
 
 }

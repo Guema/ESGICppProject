@@ -1,21 +1,20 @@
 #pragma once
 
-enum Case
-{
-	Case_Empty,
-	Case_Building,
-	Case_Landing,
-	Case_Unreachable
-};
+typedef int Case;
+
+#define CASE_EMPTY -1
+#define CASE_BUILDING -2
+#define CASE_UNREACHABLE -4
+
 
 class Field
 {
 protected:
 	int dimentions[2];
-	Case cases[];
+
 
 public:
-	Field(int dimx, int dimy);
+	Field(int dim_x, int dim_y);
 	virtual ~Field();
 
 	int GetWidth() { return dimentions[0]; }
