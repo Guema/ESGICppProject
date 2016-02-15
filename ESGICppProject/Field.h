@@ -1,7 +1,9 @@
 #pragma once
 
-#include <list>
+#include <vector>
 #include <memory>
+
+#include "Zone.h"
 
 typedef int Slot;
 
@@ -13,15 +15,17 @@ typedef int Slot;
 class Field
 {
 protected:
-	int dimentions[2];
-   std::unique_ptr<std::list<Slot> > slots;
+   int width;
+   int height;
+   std::unique_ptr<std::vector<Slot> > slots;
 
 public:
    Field(const int& dim_x,const int& dim_y, const Slot& s = SLOT_EMPTY);
 	virtual ~Field();
 
-	int GetWidth() { return dimentions[0]; }
-	int GetHeith() { return dimentions[1]; }
-
-	int& operator()(const int& posx, const int& posy);
+	int getW() { return width; }
+	int getH() { return height; }
+   int& operator()(const int& posx, const int& posy);
+   bool isEmpty(const Zone& z);
+   Zone findEmptyZone(const int& width,const int& height);
 };
