@@ -1,25 +1,27 @@
 #pragma once
 
-typedef int Case;
+#include <list>
+#include <memory>
 
-#define CASE_EMPTY -1
-#define CASE_BUILDING -2
-#define CASE_UNREACHABLE -4
+typedef int Slot;
 
+#define SLOT_EMPTY -1
+#define SLOT_BUILDING -2
+#define SLOT_UNREACHABLE -4
+#define SLOT_BUILDING 1
 
 class Field
 {
 protected:
 	int dimentions[2];
-
+   std::unique_ptr<std::list<Slot> > slots;
 
 public:
-	Field(int dim_x, int dim_y);
+   Field(const int& dim_x,const int& dim_y, const Slot& s = SLOT_EMPTY);
 	virtual ~Field();
 
 	int GetWidth() { return dimentions[0]; }
 	int GetHeith() { return dimentions[1]; }
 
-	int operator()(int posx, int posy);
-
+	int& operator()(const int& posx, const int& posy);
 };
