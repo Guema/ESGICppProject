@@ -15,16 +15,16 @@ Field::~Field()
 
 int& Field::operator()(const int& posx, const int& posy)
 {
-   return (*slots)[posy * height + posx];
+   return slots->operator[](posy * width + posx);
 }
 
 bool Field::isEmpty(const Zone& z)
 {
-   for (int y = z.getY; y != z.getH; y++)
+   for (int y = z.getY; y < z.getY + z.getH; y++)
    {
-      for (int x = z.getX; x != z.getW; x++)
+      for (int x = z.getX; x < z.getX + z.getW; x++)
       {
-         if ((*this)(x, y) != SLOT_EMPTY)
+         if (operator()(x, y) != SLOT_EMPTY)
             return false;
       }
    }
@@ -32,6 +32,21 @@ bool Field::isEmpty(const Zone& z)
 }
 
 Zone Field::findEmptyZone(const int& width, const int& height)
+{
+   Zone z;
+   z.setW(width);
+   z.setH(height);
+   for (int y = 0; y < this->height - height; y++)
+   {
+      for (int x = 0; x < this->width - width; x++)
+      {
+
+      }
+   }
+   return
+}
+
+bool Field::build(const Zone& z)
 {
 
 }

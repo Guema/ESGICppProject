@@ -1,10 +1,11 @@
 #include "Zone.h"
 
-Zone::Zone(const int& x, const int& y)
+Zone::Zone(const int& x, const int& y, const int& width, const int& height)
 {
    this->x = x;
    this->y = y;
-   width = height = 0;
+   this->width = width;
+   this->height = height;
    id = ZONE_ID_UNDEFINED;
 }
 

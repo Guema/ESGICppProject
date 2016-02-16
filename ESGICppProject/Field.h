@@ -28,4 +28,5 @@ public:
    int& operator()(const int& posx, const int& posy);
    bool isEmpty(const Zone& z);
    Zone findEmptyZone(const int& width,const int& height);
+   bool build(const Zone& z);
 };
