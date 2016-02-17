@@ -27,12 +27,10 @@ public:
    void setW(int width){ this->width = width; }
    void setH(int height){ this->height = height; }
    void setId(int id){ this->id = id; }
-   int getX(){ return x; }
-   int getY(){ return y; }
-   int getW(){ return width; }
-   int getH(){ return height; }
-   int getId() { return id; }
+   int getX() const { return x; }
+   int getY() const { return y; }
+   int getW() const { return width; }
+   int getH() const { return height; }
+   int getId() const { return id; }
    bool isEmpty();
 };
-
-const Zone Zone::zero = Zone(0, 0, 0, 0);
