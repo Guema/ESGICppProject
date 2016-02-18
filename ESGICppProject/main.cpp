@@ -1,14 +1,14 @@
 #include <iostream>
 #include <string>
 
-#include "Zone.h"
 #include "Field.h"
-#include "Building.h"
-#include "BuildingFactory.h"
-#include "Base.h"
+#include "Zone.h"
+#include <stdlib.h>
 
 int main()
 {
-
-	return 0;
+   Field field(5, 5);
+   std::cin >> field;
+   std::cout << field;
+   system("pause");
 }
