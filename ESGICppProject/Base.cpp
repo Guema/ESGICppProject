@@ -48,9 +48,39 @@ Base::Base(Base & ba)
 	this->gold = ba.gold;
 }
 
-void Base::Add(Building build, int x, int y)
+int Base::Add(Building build, int x, int y)
 {
-
+	int width = build.get_width;
+	int height = build.get_height;
+	if (base[x][y] == 0)
+	{
+		for (int i = 0; i < height; i++) 
+		{
+			if (base[i][y] == 0)
+			{
+				for (int j = 0; j < width; j++)
+				{
+					if (base[i][j] != 0) 
+					{
+						cout << "Le bâtiment ne peut pas être construit ici" << endl;
+						return 0;
+					}
+				}
+			}
+			else
+			{
+				cout << "Le bâtiment ne peut pas être construit ici" << endl;
+				return 0;
+			}
+		}
+		Building_List.push_back(build);
+		cout << "Bâtiment construit" << endl;
+		return 1;
+	}
+	else {
+		cout << "Le bâtiment ne peut pas être construit ici" << endl;
+		return 0;
+	}
 }
 
 
