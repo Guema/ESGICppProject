@@ -2,64 +2,109 @@
 
 const Zone Zone::zero = Zone(0, 0, 0, 0);
 
-Field::Field(const int& dim_x, const int& dim_y, const Slot& s)
+Field::Field(const int& dim_x, const int& dim_y, const Tile& s)
 {
    width = dim_x;
    height = dim_y;
-   slots.reset(new std::vector<Slot>(width * height, s));
+   slots = std::vector<Tile>(width * height, s);
 }
 
 Field::~Field()
 {
-   if (slots)
-      slots->clear();
+   slots.clear();
 }
 
 int& Field::operator()(const int& posx, const int& posy)
 {
-   return slots->operator[](posy * width + posx);
+   return slots.operator[](posy * width + posx);
 }
 
-bool Field::isEmpty(Zone& z)
+int Field::getTile(const int& posx, const int& posy) const
 {
-   for (int y = z.getY(); y < z.getY() + z.getH(); y++)
+   return slots.at(posy * width + posx);
+}
+
+bool Field::isEmpty(Zone& z) const
+{
+   int left = z.getX();
+   int top = z.getY();
+   int right = z.getX() + z.getW();
+   int bot = z.getY() + z.getH();
+   if (left < 0 || top < 0 || right > width || bot > height)
+      return false;
+   for (int y = top; y < bot; y++)
    {
-      for (int x = z.getX(); x < z.getX() + z.getW(); x++)
+      for (int x = left; x < right; x++)
       {
-         if (operator()(x, y) != SLOT_EMPTY)
+         if (getTile(x, y) != TILE_EMPTY)
             return false;
       }
    }
    return true;
 }
 
-Zone Field::findEmptyZone(const int& width, const int& height)
+Zone Field::findEmptyZone(const int& width, const int& height) const
 {
-   Zone z;
-   z.setW(width);
-   z.setH(height);
-   for (int y = 0; y < this->height - height; y++)
+   Zone z(0, 0, width, height);
+   for (int y = 0; y < this->height; y++)
    {
-      for (int x = 0; x < this->width - width; x++)
+      z.setY(y);
+      for (int x = 0; x < this->width; x++)
       {
-
+         z.setX(x);
+         if (isEmpty(z))
+         {
+            return z;
+         }
       }
    }
-   return z;
+   return Zone(0, 0, 0, 0);
 }
 
-bool Field::build(const Zone& z)
+bool Field::build(Zone& z)
 {
+   int left = z.getX();
+   int top = z.getY();
+   int right = z.getX() + z.getW();
+   int bot = z.getY() + z.getH();
+   if (isEmpty(z))
+   {
+      for (int y = top; y < bot; y++)
+      {
+         for (int x = left; x < right; x++)
+         {
+            this->operator()(x, y) = z.getId();
+         }
+      }
+      return true;
+   }
    return false;
+}
+
+void Field::erase(Zone& z)
+{
+   int left = z.getX();
+   int top = z.getY();
+   int right = z.getX() + z.getW();
+   int bot = z.getY() + z.getH();
+   if (left < 0 || top < 0 || right > width || bot > height)
+      return;
+   for (int y = top; y < bot; y++)
+   {
+      for (int x = left; x < right; x++)
+      {
+         this->operator()(x, y) = TILE_EMPTY;
+      }
+   }
 }
 
 
 std::ostream& operator<<(std::ostream& os, Field& field)
 {
    os << "W: " << field.getW() << " H: " << field.getH() << std::endl;
-   for (int i = 0; i < field.getH(); i++)
+   for (int i = 0; i < field.height; i++)
    {
-      for (int j = 0; j < field.getW(); j++)
+      for (int j = 0; j < field.width; j++)
       {
          os << (field(j, i) > 0 && field(j,i) < 10 ? " " : "")
             << field(j, i)
@@ -68,4 +113,14 @@ std::ostream& operator<<(std::ostream& os, Field& field)
       os << std::endl;
    }
    return os;
+}
+
+std::istream& operator>>(std::istream& is, Field& field)
+{
+   is >> field.width >> field.height;
+   for (int i = 0; i < field.width * field.height; i++)
+   {
+      is >> field.slots[i];
+   }
+   return is;
 }

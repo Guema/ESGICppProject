@@ -2,11 +2,13 @@
 #include <iostream>
 
 #include "Field.h"
+#include "Zone.h"
+#include <stdlib.h>
 
 int main()
 {
    Field field(5, 5);
-   field(4, 4) = 2;
+   std::cin >> field;
    std::cout << field;
-   std::cin.get();
+   system("pause");
 }

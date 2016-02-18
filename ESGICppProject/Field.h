@@ -6,30 +6,34 @@
 
 #include "Zone.h"
 
-typedef int Slot;
+typedef int Tile;
 
-#define SLOT_EMPTY -1
-#define SLOT_LANDING -2
-#define SLOT_UNREACHABLE -4
-#define SLOT_BUILDING 1
+#define TILE_EMPTY -1
+#define TILE_LANDING -2
+#define TILE_UNREACHABLE -4
+#define TILE_OUT_OF_BOUND 0
+#define TILE_BUILDING 1
 
 class Field
 {
 protected:
    int width;
    int height;
-   std::unique_ptr<std::vector<Slot> > slots;
+   std::vector<Tile> slots;
 
 public:
-   Field(const int& dim_x,const int& dim_y, const Slot& s = SLOT_EMPTY);
+   Field(const int& dim_x,const int& dim_y, const Tile& s = TILE_EMPTY);
 	virtual ~Field();
 
 	int getW() const { return width; }
 	int getH() const { return height; }
    int& operator()(const int& posx, const int& posy);
-   bool isEmpty(Zone& z);
-   Zone findEmptyZone(const int& width,const int& height);
-   bool build(const Zone& z);
+   int getTile(const int& posx, const int& posy) const;
+   bool isEmpty(Zone& z) const;
+   Zone findEmptyZone(const int& width,const int& height) const;
+   bool build(Zone& z);
+   void erase(Zone& z);
+   friend std::ostream& operator<<(std::ostream& os, Field& field);
+   friend std::istream& operator>>(std::istream& is, Field& field);
 };
 
-std::ostream& operator<<(std::ostream& os, Field& field);
