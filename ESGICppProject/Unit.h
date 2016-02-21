@@ -2,128 +2,129 @@
 
 #include <iostream>
 #include <string>
-#include "Zone.h"
 
 using namespace std;
 
-class Building
+class Unit
 {
 public:	
-	Building() {}
+	Unit() {}
 	// Fonctions principales
 	int nextUpdateCost();
 	int levelUp();
 
-	friend ostream& operator<<(ostream& os, const Building & bd);
+	friend ostream& operator<<(ostream& os, const Unit & u);
 
 	virtual void setDefaultParameters() = 0;
 	virtual void Free() = 0;
 	// Getters
 	string getName() const { return name; }
 	int getCost() const { return cost; }
-	int getWidth() const { return width; }
-	int getHeight() const { return height; }
 	int getHP() const { return hp; }
 	int getLevel() const { return level; }
 	float getHPUpdateRate() const { return healthUpdateRate; }
 	float getCostUpdateRate() const { return costUpdateRate; }
-	Zone getZone() const { return zone; }
-	int getX() const { return zone.getX(); }
-	int getY() const { return zone.getY(); }
 	
 	// Setters	
 	void setName(string nom) { name = nom; }
 	void setCost(int cout) { cost = cout; }
-	void setWidth(int w) { width = w; }
-	void setHeight(int h) { height = h; }
 	void setHP(int pv) { hp = pv; }
 	void setLevel(int lvl) { level = lvl; }
 	void setHPUpdateRate(float hpRate) { healthUpdateRate = hpRate; }
 	void setCostUpdateRate(float costRate) { costUpdateRate = costRate; }
-	void setZone(Zone z) { zone = z; }
-	void setX(int x) { zone.setX(x); }
-	void setY(int y) { zone.setY(y); }
 	
 protected:
 	string name;
 	int maxInstances;
 	int cost;
-	int width;
-	int height;
+	int attack;
+	float firerate;
+	int range;
 	int hp;
 	int level;
+	float attackUpdateRate;
+	float firerateUpdateRate;
+	float rangeUpdateRate;
 	float healthUpdateRate;
 	float costUpdateRate;
-	Zone zone;
 };
 
-typedef Building * (__stdcall *CreateBuildingFgpn)(void);
+typedef Unit * (__stdcall *CreateUnitFgpn)(void);
 
-class Building1 : public Building
+class Unit1 : public Unit
 {
 public:
-	Building1() { setDefaultParameters(); }
+	Unit1() { setDefaultParameters(); }
 	void setDefaultParameters()
 	{
-		name = "Building1";
+		name = "Unit1";
 		maxInstances = 1;
-		cost = 1000;
-		width = 1;
-		height = 1;
+		cost = 100;
+		attack = 10;
+		firerate = 0.5f;
+		range = 10;
 		hp = 1000;
 		level = 0;
+		attackUpdateRate = 0.1f;
+		firerateUpdateRate = 0.1f;
+		rangeUpdateRate = 0.1f;
 		healthUpdateRate = 0.2f;
 		costUpdateRate = 0.1f;
-		zone = Zone(0, 0, width, height);
 	}
 	
 	void Free() { delete this; }
 
-	static Building * __stdcall Create() { return new Building1(); }
+	static Unit * __stdcall Create() { return new Unit1(); }
 };
 
-class Building2 : public Building
+class Unit2 : public Unit
 {
 public:
-	Building2() { setDefaultParameters(); }
+	Unit2() { setDefaultParameters(); }
 	void setDefaultParameters()
 	{
-		name = "Building2";
+		name = "Unit2";
 		maxInstances = 2;
-		cost = 2000;
-		width = 2;
-		height = 2;
+		cost = 200;
+		attack = 10;
+		firerate = 0.5f;
+		range = 10;
 		hp = 2000;
 		level = 0;
+		attackUpdateRate = 0.1f;
+		firerateUpdateRate = 0.1f;
+		rangeUpdateRate = 0.1f;
 		healthUpdateRate = 0.2f;
 		costUpdateRate = 0.1f;
-		zone = Zone(0, 0, width, height);
 	}
 
 	void Free() { delete this; }
 
-	static Building * __stdcall Create() { return new Building2(); }
+	static Unit * __stdcall Create() { return new Unit2(); }
 };
 
-class Building3 : public Building
+class Unit3 : public Unit
 {
 public:
-	Building3() { setDefaultParameters(); }
+	Unit3() { setDefaultParameters(); }
 	void setDefaultParameters()
 	{
-		name = "Building3";
+		name = "Unit3";
 		maxInstances = 3;
-		cost = 3000;
-		width = 2;
-		height = 3;
+		cost = 300;
+		attack = 10;
+		firerate = 0.5f;
+		range = 10;
 		hp = 3000;
 		level = 0;
+		attackUpdateRate = 0.1f;
+		firerateUpdateRate = 0.1f;
+		rangeUpdateRate = 0.1f;
 		healthUpdateRate = 0.2f;
 		costUpdateRate = 0.1f;
-		zone = Zone(0, 0, width, height);
 	}
 
 	void Free() { delete this; }
 
-	static Building * __stdcall Create() { return new Building3(); }
+	static Unit * __stdcall Create() { return new Unit3(); }
 };

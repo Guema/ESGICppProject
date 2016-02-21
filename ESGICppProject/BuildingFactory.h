@@ -1,21 +1,17 @@
 #pragma once
 #include <iostream>
-#include <fstream>      // std::ifstream
 #include <string>
 #include <sstream>
 #include <vector>
 #include <map>
 #include "Building.h"
 
-#define NUMBER_BUILDINGS 10
-#define MAX_LENGTH_LINE 20
-
 class BuildingFactory
 {
 public:
-	vector<string> buildingList();
+	vector<string> BuildingNameList();
 	Building* readNextBuilding(std::istream& stream);
-	void Register(const string &buildingName, CreateBuildinFgpn pfnCreate);
+	void Register(const string &buildingName, CreateBuildingFgpn pfnCreate);
 	Building *build(const string &buildingName);
 
 	~BuildingFactory() { m_FactoryMap.clear(); }
@@ -27,7 +23,7 @@ public:
 	}
 
 private:
-	typedef map<string, CreateBuildinFgpn> FactoryMap;
+	typedef map<string, CreateBuildingFgpn> FactoryMap;
 	BuildingFactory();
 	BuildingFactory(const BuildingFactory &) { }
 	BuildingFactory &operator=(const BuildingFactory &) { return *this; }

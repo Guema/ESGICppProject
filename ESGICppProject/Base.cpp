@@ -4,8 +4,7 @@ Base::Base()
 {	
 	field = Field(FIELD_SIZE, FIELD_SIZE, TILE_EMPTY);
 	
-	int beachPos = (rand() % 100) % 4; // NOTE: Donne la même valeur (3) chaque fois, pourquoi???
-	cout << "beachPosition = " << beachPos << endl;
+	int beachPos = (rand() % 100) % 4;
 	Zone beach;
 	switch (beachPos)
 	{
@@ -25,7 +24,7 @@ Base::Base()
 		break;
 	} 	
 	field.build(beach);
-	gold = DEFAULT_GOLD;
+	gold = DEFAULT_BASE_GOLD;
 	idCount = 1;
 }
 
@@ -57,6 +56,7 @@ bool Base::AddBuilding(string name, int x, int y)
 			field.build(z);
 			buildingList[idCount] = pBuilding;
 			idCount++;
+			gold -= pBuilding->getCost();
 			cout << "ADD ok" << endl;
 			return true;
 		}
@@ -64,9 +64,22 @@ bool Base::AddBuilding(string name, int x, int y)
 			cout << "ERREUR: la zone choisie n'est pas vide pour construire!" << endl;
 	}
 	else
-	{
 		cout << "ERREUR: le nom choisi n'est pas un nom du batiment valide!" << endl;		
+	return false;
+}
+
+bool Base::UpgradeBuilding(int id)
+{
+	BaseMap::iterator it;
+	it = buildingList.find(id);
+	if (it != buildingList.end())
+	{
+		gold -= it->second->nextUpdateCost();
+		it->second->levelUp();
+		cout << "Upgrade ok" << endl;
+		return true;
 	}
+	cout << "ERREUR: l'ID choisie n'existe pas - peut pas ameliorer!" << endl;
 	return false;
 }
 
@@ -85,29 +98,18 @@ bool Base::RemoveBuilding(int id)
 	return false;	
 }
 
-bool Base::UpgradeBuilding(int id)
-{
-	BaseMap::iterator it;
-	it = buildingList.find(id);
-	if (it != buildingList.end())
-	{
-		it->second->levelUp();
-		cout << "Upgrade ok" << endl;
-		return true;
-	}
-	cout << "ERREUR: l'ID choisie n'existe pas - peut pas ameliorer!" << endl;
-	return false;
-}
-
 void Base::DisplayBase()
 {
-	cout << "Les batiments existants sur la terraine:" << endl;
+	cout << "MONTANT D'OR RESTANT : " << gold << endl;
+	cout << "Les batiments existants sur le terrain : " << endl;
 	for (BaseMap::iterator it = buildingList.begin(); it != buildingList.end(); it++)
 	{
-		cout << *it->second << endl;
+		cout << *it->second;
 	}
-	cout << "LA TERRAINE:" << endl;
+	cout << endl;
+	cout << "LE TERRAIN : " << endl;
 	cout << field;
+	cout << endl;
 }
 
 void Base::SaveBase(string myFile)

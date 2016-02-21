@@ -2,7 +2,7 @@
 
 int Building::nextUpdateCost()
 {
-	return (int)(cost*costUpdateRate);
+	return (int)(cost*(1+costUpdateRate));
 }
 
 int Building::levelUp()
@@ -16,6 +16,6 @@ int Building::levelUp()
 // Surchargeur d'écriture
 ostream& operator<<(ostream& os, const Building & bd)
 {
-	os << bd.getName() << " - level " << bd.getLevel() << " HP = " << bd.getHP() << endl;
+	os << bd.getName() << " - level " << bd.getLevel() << " - HP = " << bd.getHP() << endl;
 	return os;
 }

@@ -10,7 +10,7 @@ using namespace::std;
 
 #define FIELD_SIZE 20
 #define BEACH_SIZE 12
-#define DEFAULT_GOLD 3000
+#define DEFAULT_BASE_GOLD 100000
 
 typedef map<int, Building*> BaseMap;
 

@@ -11,7 +11,7 @@ BuildingFactory::BuildingFactory()
 	Register("Building3", &Building3::Create);
 }
 
-void BuildingFactory::Register(const string &buildingName, CreateBuildinFgpn pfnCreate)
+void BuildingFactory::Register(const string &buildingName, CreateBuildingFgpn pfnCreate)
 {
 	m_FactoryMap[buildingName] = pfnCreate;
 }
@@ -24,7 +24,24 @@ Building *BuildingFactory::build(const string &buildingName)
 	return nullptr;
 }
 
-vector<string> BuildingFactory::buildingList()
+Building* BuildingFactory::readNextBuilding(istream& stream)
+{
+	string name;
+	int lvl = 0;
+	stream >> name >> lvl;
+
+	Building *bd = build(name);
+
+	if (bd)
+	{
+		bd->setLevel(0);
+		for (int i = 0; i < lvl; i++)
+			bd->levelUp();		
+	}
+	return bd;
+}
+
+vector<string> BuildingFactory::BuildingNameList()
 {	
 	vector<string> bdList;
 	FactoryMap::iterator it, end = m_FactoryMap.end();
@@ -34,25 +51,8 @@ vector<string> BuildingFactory::buildingList()
 	}
 	for (int i = 0; i < bdList.size(); i++)
 	{
-		cout << bdList[i] << endl;
+		cout << bdList[i] << "     ";
 	}
+	cout << endl;
 	return bdList;
-}
-
-Building* BuildingFactory::readNextBuilding(istream& stream)
-{	
-	string s, name; 	
-	int lvl = 1;	
-	stream >> name >> lvl;
-	
-	Building *bd = build(name);	
-	
-	if (bd)
-	{
-		bd->setLevel(1);
-		for (int i = 0; i < lvl-1; i++)
-			bd->levelUp();
-		return bd;
-	}
-	return nullptr;
 }
