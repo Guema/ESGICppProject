@@ -121,12 +121,12 @@ bool Base::UpgradeBuilding(int id)
 /*Affichage de la base via l'état de toute les postions présentes dessus*/
 void Base::DisplayBase()
 {
-	cout << "Les batiments existants sur la terraine:" << endl;
+	cout << "Les batiments existants sur le terraine :" << endl;
 	for (BaseMap::iterator it = buildingList.begin(); it != buildingList.end(); it++)
 	{
 		cout << *it->second << endl;
 	}
-	cout << "LA TERRAINE:" << endl;
+	cout << "LE TERRAIN:" << endl;
 	cout << field;
 }
 

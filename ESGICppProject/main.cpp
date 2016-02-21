@@ -19,6 +19,7 @@ int main()
 {	
 	int choix = 0;		
 
+	/*Menu principal*/
 	while (choix != 3)
 	{
 		cout << "Bienvenue dans HQ Attack. Que souhaitez vous faire : " << endl;
@@ -46,6 +47,7 @@ int main()
 	system("pause");
 }
 
+/*Chargement du fichier de sauvegarde*/
 void LoadGame()
 {	
 	cout << "Entrer le nom du fichier a charger: ";
@@ -54,6 +56,7 @@ void LoadGame()
 	Play();
 }
 
+/*Lancement du jeu*/
 void Play()
 {
 	int choix = 0;
@@ -61,6 +64,7 @@ void Play()
 	int x, y, id;	
 	vector<string> bdl;
 
+	/*Menu d'accueil du jeu*/
 	while (choix != 8)
 	{	
 		cout << "Que Souhaitez vous faire : " << endl;
