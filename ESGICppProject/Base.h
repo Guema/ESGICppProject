@@ -7,20 +7,23 @@
 #include "Field.h"
 #include "Zone.h"
 #include <list>
-using namespace::std;
+using namespace std;
 
+#define FIELD_SIZE 20
 class Base
 {
 public:
-	Base();
-	Base(Base& ba);
-	int Add(Building build, int x, int y);
+	Base(int);
+	Base(Field&, int);
+	int AddBuilding(string name, int x, int y, int w, int h);
+	int DeleteBuilding(int id);
+	int LevelUpBuilding(int id);
+
 	~Base();
 
 private:
-	int **base;
+	Field *field;
 	int gold;
-	const static int taille = 20;
-	std::list<Building> Building_List;
+	list<Building> buildingList;
 
 };
