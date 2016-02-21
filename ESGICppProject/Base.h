@@ -6,7 +6,7 @@
 #include "BuildingFactory.h"
 #include "Field.h"
 #include "Zone.h"
-#include <list>
+#include <vector>
 using namespace::std;
 
 class Base
@@ -14,13 +14,20 @@ class Base
 public:
 	Base();
 	Base(Base& ba);
-	int Add(Building build, int x, int y);
+	bool Add(Building build, int x, int y);
+	void EraseBuilding(Building build);
+	void Upgrades(Building build);
+	void DisplayBase();
+	Field* getBase();
+	int getGold();
+	void setGold(int gol);
+	std::vector<Building> getList();
 	~Base();
 
 private:
-	int **base;
+	Field* base;
 	int gold;
 	const static int taille = 20;
-	std::list<Building> Building_List;
+	std::vector<Building> Building_List;
 
 };
