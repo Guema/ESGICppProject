@@ -1,3 +1,13 @@
+/********************************
+Realisé par:
+Dao Khanh Vu Le
+Florent Quesselaire
+Théo Couvert
+
+Pour le projet C++
+4A 3DJV ESGI 2015-2016
+*******************************/
+
 #include <iostream>
 #include <sstream>
 
