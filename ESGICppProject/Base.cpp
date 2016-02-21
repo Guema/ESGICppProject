@@ -1,9 +1,11 @@
 #include "Base.h"
 
+/*Constructeur par défaut*/
 Base::Base()
 {	
 	field = Field(FIELD_SIZE, FIELD_SIZE, TILE_EMPTY);
 	
+	int beachPos = (rand() % 100) % 4;
 	int beachPos = (rand() % 100) % 4;
 	Zone beach;
 	switch (beachPos)
@@ -28,6 +30,9 @@ Base::Base()
 	idCount = 1;
 }
 
+/*Constructeur de la base via un terrain et un montant d'or
+@param Field &f : la zone utilisée par la base
+@param int gold : l'or disponible au début*/
 Base::Base(Field &f, int gold)
 {
 	field = f;
@@ -36,6 +41,8 @@ Base::Base(Field &f, int gold)
 	buildingList.clear();
 }
 
+/*Constructeur par copie
+@param Base & ba : la base à copier*/
 Base::Base(Base & ba)
 {
 	field = ba.field;
@@ -43,10 +50,16 @@ Base::Base(Base & ba)
 	buildingList = ba.getBuildingList();
 }
 
+/*Ajout de bâtiment présent dans une liste prédéfinie
+@string name : Le nom du bâtiment
+@int x : Position du bâtiment en x
+@int y : Position du bâtiment en y
+@return bool : true si le bâtiment a bien été ajouté, false sinon*/
 bool Base::AddBuilding(string name, int x, int y)
 {
 	Building *pBuilding = BuildingFactory::Get()->build(name);
 
+	//véifie que le bâtiment existe bien dans la liste des bâtiments disponible
 	if (pBuilding)
 	{
 		Zone z(x, y, pBuilding->getWidth(), pBuilding->getHeight(), idCount);
@@ -69,6 +82,8 @@ bool Base::AddBuilding(string name, int x, int y)
 }
 
 bool Base::UpgradeBuilding(int id)
+@int id : Identifiant du bâtiment
+@return bool : true si le bâtiment a bien été supprimé, false si celui-ci n'existe pas sur le terrain*/
 {
 	BaseMap::iterator it;
 	it = buildingList.find(id);
@@ -84,6 +99,8 @@ bool Base::UpgradeBuilding(int id)
 }
 
 bool Base::RemoveBuilding(int id)
+@int id : Identifiant du bâtiment
+@return bool : true si le bâtiment a bien été amélioré, false si celui-ci n'existe pas sur le terrain*/
 {
 	BaseMap::iterator it;
 	it = buildingList.find(id);
@@ -98,6 +115,7 @@ bool Base::RemoveBuilding(int id)
 	return false;	
 }
 
+/*Affichage de la base via l'état de toute les postions présentes dessus*/
 void Base::DisplayBase()
 {
 	cout << "MONTANT D'OR RESTANT : " << gold << endl;
@@ -112,6 +130,8 @@ void Base::DisplayBase()
 	cout << endl;
 }
 
+/*Sauvegarde de la base dans un fichier
+@string myFile : le nom du fichier de sauvegarde*/
 void Base::SaveBase(string myFile)
 {
 	ofstream myfile;
@@ -138,6 +158,8 @@ void Base::SaveBase(string myFile)
 	myfile.close();
 }
 
+/*Chargement d'une base via un fichier de sauvegarde
+@string myFile : le nom du fichier de sauvegarde à charger*/
 void Base::LoadBase(string myFile)
 {
 	ifstream myfile;
@@ -177,16 +199,22 @@ void Base::LoadBase(string myFile)
 	myfile.close();
 }
 
+/*Accesseur du terrain
+@return Field : l'état du terrain*/
 Field Base::getField()
 {
 	return field;
 }
 
+/*Accesseur de la liste des bâtiments construits
+@return BaseMap : la liste des bâtiments*/
 BaseMap Base::getBuildingList()
 {
 	return buildingList;
 }
 
+/*Accesseur de l'or du joueur
+@return int : le montant d'or à disposition du joueur*/
 Base::~Base()
 {	
 	buildingList.clear();	

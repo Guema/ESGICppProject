@@ -66,6 +66,7 @@ void LoadGame()
 	Play();
 }
 
+/*Lancement du jeu*/
 void Play()
 {
 	int choix = 0;
