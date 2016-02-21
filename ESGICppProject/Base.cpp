@@ -6,7 +6,6 @@ Base::Base()
 	field = Field(FIELD_SIZE, FIELD_SIZE, TILE_EMPTY);
 	
 	int beachPos = (rand() % 100) % 4;
-	int beachPos = (rand() % 100) % 4;
 	Zone beach;
 	switch (beachPos)
 	{
@@ -82,8 +81,10 @@ bool Base::AddBuilding(string name, int x, int y)
 }
 
 bool Base::UpgradeBuilding(int id)
+/*
 @int id : Identifiant du bâtiment
-@return bool : true si le bâtiment a bien été supprimé, false si celui-ci n'existe pas sur le terrain*/
+@return bool : true si le bâtiment a bien été supprimé, false si celui-ci n'existe pas sur le terrain
+*/
 {
 	BaseMap::iterator it;
 	it = buildingList.find(id);
@@ -99,8 +100,10 @@ bool Base::UpgradeBuilding(int id)
 }
 
 bool Base::RemoveBuilding(int id)
+/*
 @int id : Identifiant du bâtiment
-@return bool : true si le bâtiment a bien été amélioré, false si celui-ci n'existe pas sur le terrain*/
+@return bool : true si le bâtiment a bien été amélioré, false si celui-ci n'existe pas sur le terrain
+*/
 {
 	BaseMap::iterator it;
 	it = buildingList.find(id);
