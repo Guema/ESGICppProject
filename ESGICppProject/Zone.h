@@ -16,10 +16,16 @@ protected:
 
 public:
    static const Zone zero;
-   Zone(const int& x = 0, 
-        const int& y = 0,
-        const int& width = 0,
-        const int& height = 0);
+   Zone();
+   Zone(const int& x,
+	   const int& y,
+	   const int& width,
+	   const int& height);
+   Zone(const int& x, 
+        const int& y,
+        const int& width,
+        const int& height,
+		const int& id);
    virtual ~Zone();
    
    void setX(int x){ this->x = x; }

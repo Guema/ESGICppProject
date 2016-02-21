@@ -1,140 +1,191 @@
 #include "Base.h"
 
 Base::Base()
-{
-	//création de la base via un tableau à deux dimensions
-	base = new Field(taille, taille, TILE_EMPTY);
-	int beachPos = std::rand() % 20;
-	Zone* beach;
-	int i;
-	if (beachPos < 5)
-	{
-		if (beachPos < 5)
-		{
-			beach = new Zone(2, 0, 6, 2);
-			this->base->build(*beach);
-		}
-		else
-		{
-			beach = new Zone(2, 8, 6, 2);
-			this->base->build(*beach);
-		}
-	}
-	else 
-	{
-		if (beachPos < 15) 
-		{
-			beach = new Zone(0, 2, 2, 6);
-			this->base->build(*beach);
-		}
-		else {
-			beach = new Zone(8, 2, 2, 6);
-			this->base->build(*beach);
-		}
-	}
+{	
+	field = Field(FIELD_SIZE, FIELD_SIZE, TILE_EMPTY);
 	
-	gold = 3000;
+	int beachPos = (rand() % 100) % 4; // NOTE: Donne la même valeur (3) chaque fois, pourquoi???
+	cout << "beachPosition = " << beachPos << endl;
+	Zone beach;
+	switch (beachPos)
+	{
+	case 0:
+		beach = Zone((FIELD_SIZE - BEACH_SIZE) / 2, 0, BEACH_SIZE, 1, TILE_LANDING);
+		break;
+	case 1:
+		beach = Zone(0,(FIELD_SIZE - BEACH_SIZE) / 2, 1, BEACH_SIZE, TILE_LANDING);
+		break;
+	case 2:
+		beach = Zone((FIELD_SIZE - BEACH_SIZE) / 2, FIELD_SIZE-1, BEACH_SIZE, 1, TILE_LANDING);
+		break;
+	case 3:
+		beach = Zone(FIELD_SIZE-1, (FIELD_SIZE - BEACH_SIZE) / 2, 1, BEACH_SIZE, TILE_LANDING);
+		break;
+	default:
+		break;
+	} 	
+	field.build(beach);
+	gold = DEFAULT_GOLD;
+	idCount = 1;
+}
+
+Base::Base(Field &f, int gold)
+{
+	field = f;
+	this->gold = gold;
+	idCount = 1;
+	buildingList.clear();
 }
 
 Base::Base(Base & ba)
 {
-	this->base = ba.base;
-	this->gold = ba.gold;
-	this->Building_List = ba.getList();
+	field = ba.field;
+	gold = ba.gold;
+	buildingList = ba.getBuildingList();
 }
 
-bool Base::Add(Building build, int x, int y)
+bool Base::AddBuilding(string name, int x, int y)
 {
-	int width = build.get_width();
-	int height = build.get_height();
-	int cost = build.get_cost();
-	int size = this->Building_List.size();
-	Zone* NewBuilding = new Zone(x, y, width, height);
-	if (this->base->build(*NewBuilding))
-	{
-		this->Building_List.push_back(build);
-		this->Building_List.resize(size + 1);
-		cout << "Bâtiment construit" << endl;
-		this->gold -= cost;
-		build.nextUpdateCost();
-		return true;
-	}
-	else {
-		cout << "Le bâtiment ne peut pas être construit ici" << endl;
-		return false;
-	}
-}
+	Building *pBuilding = BuildingFactory::Get()->build(name);
 
-void Base::EraseBuilding(Building build)
-{
-	for (int i = 0; i < this->Building_List.size; i++)
+	if (pBuilding)
 	{
-		if (this->Building_List[i] == build)
+		Zone z(x, y, pBuilding->getWidth(), pBuilding->getHeight(), idCount);
+		if (field.isEmpty(z))
 		{
-			*this->Building_List.erase(this->Building_List[i]);
+			pBuilding->setZone(z);
+			field.build(z);
+			buildingList[idCount] = pBuilding;
+			idCount++;
+			cout << "ADD ok" << endl;
+			return true;
 		}
-	}
-	/*std::list<Building>::iterator IsExisting;
-	IsExisting = find(this->Building_List.begin(), this->Building_List.end(), build);
-	if (IsExisting != this->Building_List.end())
-	{
-		this->Building_List.remove(*IsExisting);
-	}*/
-	
-}
-
-void Base::Upgrades(Building build)
-{
-	std::vector<Building>::iterator IsExisting;
-	IsExisting = find(this->Building_List.begin(), this->Building_List.end(), build);
-	if ((IsExisting != this->Building_List.end()) && ((gold - build.get_cost()) >= 0))
-	{
-		build.levelUp();
-		this->gold -= build.get_cost();
-		build.nextUpdateCost();
-	}
-	else if (gold - build.get_cost() < 0)
-	{
-		cout << "Pas assez d'or pour améliorer le bâtiment." << endl;
+		else
+			cout << "ERREUR: la zone choisie n'est pas vide pour construire!" << endl;
 	}
 	else
 	{
-		cout << "Ce bâtiment n'existe pas dans votre base." << endl;
+		cout << "ERREUR: le nom choisi n'est pas un nom du batiment valide!" << endl;		
 	}
+	return false;
+}
+
+bool Base::RemoveBuilding(int id)
+{
+	BaseMap::iterator it;
+	it = buildingList.find(id);
+	if (it != buildingList.end())
+	{
+		field.erase(it->second->getZone());
+		buildingList.erase(it);
+		cout << "Remove ok" << endl;
+		return true;
+	}
+	cout << "ERREUR: l'ID choisie n'existe pas - peut pas enlever!" << endl;
+	return false;	
+}
+
+bool Base::UpgradeBuilding(int id)
+{
+	BaseMap::iterator it;
+	it = buildingList.find(id);
+	if (it != buildingList.end())
+	{
+		it->second->levelUp();
+		cout << "Upgrade ok" << endl;
+		return true;
+	}
+	cout << "ERREUR: l'ID choisie n'existe pas - peut pas ameliorer!" << endl;
+	return false;
 }
 
 void Base::DisplayBase()
 {
-	std::vector<Building>::iterator p = this->Building_List.begin();
-	while (p != this->Building_List.end()) {
-		cout << *p << " ";
-		p++;
+	cout << "Les batiments existants sur la terraine:" << endl;
+	for (BaseMap::iterator it = buildingList.begin(); it != buildingList.end(); it++)
+	{
+		cout << *it->second << endl;
 	}
+	cout << "LA TERRAINE:" << endl;
+	cout << field;
 }
 
-Field * Base::getBase()
+void Base::SaveBase(string myFile)
 {
-	return this->base;
+	ofstream myfile;
+	myfile.open(myFile);
+	
+	if (myfile.is_open())
+	{
+		myfile << field;
+		myfile << gold << endl;
+
+		myfile << buildingList.size() << endl;
+		for (BaseMap::iterator it = buildingList.begin(); it != buildingList.end(); it++)
+		{
+			myfile << (*it->second).getName() << " " << (*it->second).getLevel() << endl;
+		}
+		for (BaseMap::iterator it = buildingList.begin(); it != buildingList.end(); it++)
+		{
+			myfile << (*it->second).getX() << " " << (*it->second).getY() << endl;
+		}
+		cout << "SAVE ok" << endl;
+	}
+	else
+		cout << "ERREUR: Impossible d'ouvrir le fichier pour sauvegarder!" << endl;
+	myfile.close();
 }
 
-int Base::getGold()
+void Base::LoadBase(string myFile)
 {
-	return this->gold;
+	ifstream myfile;
+	int size;
+
+	myfile.open(myFile);
+	if (myfile.is_open())
+	{
+		myfile >> field;
+		myfile >> gold;
+		idCount = 1;
+		buildingList.clear();
+
+		myfile >> size;
+		for (int i = 0; i < size; i++)
+		{
+			Building *pBuilding = BuildingFactory::Get()->readNextBuilding(myfile);
+			if (pBuilding)
+			{				
+				buildingList[idCount] = pBuilding;
+				idCount++;
+			}
+			else
+				cout << "Erreur de lire du batiment " << i << "depuis fichier" << endl;
+		}
+
+		for (int i = 1; i < size; i++)
+		{
+			int x, y;
+			myfile >> x >> y;
+			buildingList[i+1]->setX(x); // i+1 car idCount commence à 1!
+			buildingList[i+1]->setY(x);
+		}
+	}
+	else
+		cout << "ERREUR: Fichier non existe - Creer une nouvelle partie!" << endl;
+	myfile.close();
 }
 
-void Base::setGold(int gol)
+Field Base::getField()
 {
-	this->gold = gol;
+	return field;
 }
 
-std::vector<Building> Base::getList()
+BaseMap Base::getBuildingList()
 {
-	return this->Building_List;
+	return buildingList;
 }
-
-
 
 Base::~Base()
-{
-	delete[] base;
+{	
+	buildingList.clear();	
 }

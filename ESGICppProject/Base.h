@@ -1,33 +1,42 @@
 #pragma once
-#include <string>
+
 #include <iostream>
-#include <math.h>
-#include "Base.h"
+#include <fstream>
+
 #include "BuildingFactory.h"
 #include "Field.h"
-#include "Zone.h"
-#include <vector>
+
 using namespace::std;
+
+#define FIELD_SIZE 20
+#define BEACH_SIZE 12
+#define DEFAULT_GOLD 3000
+
+typedef map<int, Building*> BaseMap;
 
 class Base
 {
 public:
 	Base();
+	Base(Field&, int);
 	Base(Base& ba);
-	bool Add(Building build, int x, int y);
-	void EraseBuilding(Building build);
-	void Upgrades(Building build);
+	bool AddBuilding(string name, int x, int y);
+	bool RemoveBuilding(int id);
+	bool UpgradeBuilding(int id);
 	void DisplayBase();
-	Field* getBase();
-	int getGold();
-	void setGold(int gol);
-	std::vector<Building> getList();
+	void SaveBase(string myFile);
+	void LoadBase(string myFile);
+	Field getField();
+	BaseMap getBuildingList();
+	
+	int getGold() const { return gold; }
+	void setGold(int gold) { this->gold = gold; }
+	
 	~Base();
 
-private:
-	Field* base;
+private:	
+	Field field;
 	int gold;
-	const static int taille = 20;
-	std::vector<Building> Building_List;
-
+	int idCount;
+	BaseMap buildingList;
 };

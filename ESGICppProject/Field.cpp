@@ -1,12 +1,47 @@
 #include "Field.h"
 
-const Zone Zone::zero = Zone(0, 0, 0, 0);
+Field::Field()
+{
+	width = 0;
+	height = 0;	
+}
 
 Field::Field(const int& dim_x, const int& dim_y, const Tile& s)
 {
    width = dim_x;
    height = dim_y;
-   slots = std::vector<Tile>(width * height, s);
+   slots = vector<Tile>(width * height, s);
+}
+
+// Constructeur par copie
+Field::Field(const Field &f)
+{
+	int size = f.width * f.height;
+	if (size <= 0)
+	{	
+		width = 0;
+		height = 0;
+	}
+	else
+	{
+		slots = f.slots;		
+		width = f.width;
+		height = f.height;		
+	}
+}
+
+// Méthode swap
+void Field::swap(Field &f)
+{
+	std::swap(width, f.width);
+	std::swap(height, f.height);
+	std::swap(slots, f.slots);
+}
+
+Field & Field::operator=(Field &f)
+{
+	swap(f);
+	return *this;
 }
 
 Field::~Field()
@@ -101,7 +136,7 @@ void Field::erase(Zone& z)
 
 std::ostream& operator<<(std::ostream& os, Field& field)
 {
-   os << "W: " << field.getW() << " H: " << field.getH() << std::endl;
+   os << field.getW() << " " << field.getH() << std::endl;
    for (int i = 0; i < field.height; i++)
    {
       for (int j = 0; j < field.width; j++)

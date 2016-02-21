@@ -1,41 +1,58 @@
 #include "BuildingFactory.h"
 
-vector<string> BuildingFactory::buildingList()
+/* Building factory constructor.
+Register the types of buildings here.
+*/
+BuildingFactory::BuildingFactory()
 {
-	vector<string> nameList(NUMBER_BUILDINGS, "");
-	for (int i = 0; i < nameList.size(); i++)
-	{
-		nameList[i] = "BUILDING " + i;
-	}
-	return nameList;
+	;
+	Register("Building1", &Building1::Create);
+	Register("Building2", &Building2::Create);
+	Register("Building3", &Building3::Create);
 }
 
-Building* BuildingFactory::build(string name)
+void BuildingFactory::Register(const string &buildingName, CreateBuildinFgpn pfnCreate)
 {
-	vector<string> nameList = buildingList();
-	for (int i = 0; i < nameList.size(); i++)
-	{
-		if (name == nameList[i])
-		{
-			Building *bd = new Building;
-			bd->set_name(name);
-			return bd;
-		}
-	}
+	m_FactoryMap[buildingName] = pfnCreate;
+}
+
+Building *BuildingFactory::build(const string &buildingName)
+{
+	FactoryMap::iterator it = m_FactoryMap.find(buildingName);
+	if (it != m_FactoryMap.end())
+		return it->second();
 	return nullptr;
+}
+
+vector<string> BuildingFactory::buildingList()
+{	
+	vector<string> bdList;
+	FactoryMap::iterator it, end = m_FactoryMap.end();
+	for (it = m_FactoryMap.begin(); it != end; it++)
+	{
+		bdList.push_back(it->first);
+	}
+	for (int i = 0; i < bdList.size(); i++)
+	{
+		cout << bdList[i] << endl;
+	}
+	return bdList;
 }
 
 Building* BuildingFactory::readNextBuilding(istream& stream)
 {	
-	char name[MAX_LENGTH_LINE];
-	stream.get(name, MAX_LENGTH_LINE, ' ');
-	int lvl;
-	stream >> lvl;
-	Building *bd = build(name);
-	if (bd != nullptr)
+	string s, name; 	
+	int lvl = 1;	
+	stream >> name >> lvl;
+	
+	Building *bd = build(name);	
+	
+	if (bd)
 	{
-		for (int i = 0; i < lvl; i++)
+		bd->setLevel(1);
+		for (int i = 0; i < lvl-1; i++)
 			bd->levelUp();
+		return bd;
 	}
-	return bd;
+	return nullptr;
 }
