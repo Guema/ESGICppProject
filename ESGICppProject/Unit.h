@@ -51,6 +51,7 @@ protected:
 
 typedef Unit * (__stdcall *CreateUnitFgpn)(void);
 
+// Définition de Unit1
 class Unit1 : public Unit
 {
 public:
@@ -77,6 +78,7 @@ public:
 	static Unit * __stdcall Create() { return new Unit1(); }
 };
 
+// Définition de Unit2
 class Unit2 : public Unit
 {
 public:
@@ -103,6 +105,7 @@ public:
 	static Unit * __stdcall Create() { return new Unit2(); }
 };
 
+// Définition de Unit3
 class Unit3 : public Unit
 {
 public:
@@ -128,3 +131,5 @@ public:
 
 	static Unit * __stdcall Create() { return new Unit3(); }
 };
+
+/* Possible d'ajouter d'autres types d'uniité */

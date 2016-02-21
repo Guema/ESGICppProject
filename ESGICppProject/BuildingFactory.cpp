@@ -1,6 +1,7 @@
 #include "BuildingFactory.h"
 
-/* Building factory constructor.
+/* 
+Building factory constructor.
 Register the types of buildings here.
 */
 BuildingFactory::BuildingFactory()
@@ -11,11 +12,13 @@ BuildingFactory::BuildingFactory()
 	Register("Building3", &Building3::Create);
 }
 
+// Définition de la map
 void BuildingFactory::Register(const string &buildingName, CreateBuildingFgpn pfnCreate)
 {
 	m_FactoryMap[buildingName] = pfnCreate;
 }
 
+// Instancier un nouveau batiment à partir de son nom
 Building *BuildingFactory::build(const string &buildingName)
 {
 	FactoryMap::iterator it = m_FactoryMap.find(buildingName);
@@ -24,6 +27,7 @@ Building *BuildingFactory::build(const string &buildingName)
 	return nullptr;
 }
 
+// Créer un batiment et l'améliorer au nom et niveau saisis
 Building* BuildingFactory::readNextBuilding(istream& stream)
 {
 	string name;
@@ -41,6 +45,7 @@ Building* BuildingFactory::readNextBuilding(istream& stream)
 	return bd;
 }
 
+// Retourner la liste des noms des batiments
 vector<string> BuildingFactory::BuildingNameList()
 {	
 	vector<string> bdList;

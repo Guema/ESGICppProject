@@ -9,6 +9,7 @@ using namespace std;
 #define RETURN_MENU_CODE 100
 #define QUIT_GAME_CODE 10
 
+// Variables globales pour stocker l'état de la base et de l'armée
 Base base;
 Army army;
 
@@ -31,9 +32,9 @@ int main()
 		switch (choix)
 		{
 		case 1:	// Fonction de creer une nouvelle partie			
-			Play();
+			NewGame();
 			break;
-		case 2:	// Fonction de chargement de partie			
+		case 2:	// Fonction de chargement de partie
 			LoadGame();
 			break;
 		case 3:	// Quitter le jeu
@@ -44,29 +45,37 @@ int main()
 			cout << "Je n'ai pas compris votre choix, veuillez choisir entre 1 et 3 ! \n" << endl;			
 			break;
 		}
-	}	
-	system("pause");
+	}
+	//system("pause");
 }
 
+// Réinitialiser les variables globales pour une nouvelle partie
 void NewGame()
 {
 	base = Base();
 	army = Army();
+	Play();
 }
 
+// Chargement d'une partie à partir des fichiers
 void LoadGame()
 {	
+	// Chargement de la base
 	string fichier;
 	cout << "Entrer le nom du fichier a charger pour la base: ";
 	cin >> fichier;
 	base.LoadBase(fichier);
+	
+	// Chargement de l'armée
 	cout << "Entrer le nom du fichier a charger pour l'armee: ";
 	cin >> fichier;
 	army.LoadArmy(fichier);
+
+	// Lancer le jeu
 	Play();
 }
 
-/*Lancement du jeu*/
+// Lancement du jeu
 void Play()
 {
 	int choix = 0;
@@ -77,15 +86,15 @@ void Play()
 	while (choix != RETURN_MENU_CODE)
 	{	
 		cout << "Que Souhaitez vous faire : " << endl;
-		cout << "1) Ajouter un batiment" << endl;
-		cout << "2) Ameliorer un batiment" << endl;
-		cout << "3) Detruire un batiment" << endl;
-		cout << "4) Ajouter une unite" << endl;
-		cout << "5) Ameliorer une unite" << endl;
-		cout << "6) Detruire une unite" << endl;
-		cout << "7) Afficher votre armee" << endl;
-		cout << "8) Afficher la base" << endl;
-		cout << "9) Sauvegarder une partie" << endl;
+		cout << "1)  Ajouter un batiment" << endl;
+		cout << "2)  Ameliorer un batiment" << endl;
+		cout << "3)  Detruire un batiment" << endl;
+		cout << "4)  Ajouter une unite" << endl;
+		cout << "5)  Ameliorer une unite" << endl;
+		cout << "6)  Detruire une unite" << endl;
+		cout << "7)  Afficher votre armee" << endl;
+		cout << "8)  Afficher la base" << endl;
+		cout << "9)  Sauvegarder une partie" << endl;
 		cout << "10) Revenir au menu principal" << endl;
 
 		cin >> choix;
@@ -117,12 +126,12 @@ void Play()
 			army.AddUnit(name);
 			break;
 		case 5:	// Fonction d'ameliration d'unite
-			cout << "Saisir l'ID de l'unite a ameliorer: ";
+			cout << "Saisir l'ID de l'unite a ameliorer : ";
 			cin >> id;
 			army.UpgradeUnit(id);
 			break;
 		case 6:	// Fonction de suppression d'unite
-			cout << "Saisir l'ID de l'unite a enlever: ";
+			cout << "Saisir l'ID de l'unite a enlever : ";
 			cin >> id;
 			army.RemoveUnit(id);
 			break;
@@ -133,10 +142,10 @@ void Play()
 			base.DisplayBase();
 			break;
 		case 9:	// Fonction de sauvegarde de partie
-			cout << "Entrer le nom du fichier a sauvegarder pour la base: ";
+			cout << "Entrer le nom du fichier a sauvegarder pour la base : ";
 			cin >> fichier;
 			base.SaveBase(fichier);
-			cout << "Entrer le nom du fichier a sauvegarder pour l'armee: ";
+			cout << "Entrer le nom du fichier a sauvegarder pour l'armee : ";
 			cin >> fichier;
 			army.SaveArmy(fichier);
 			break;

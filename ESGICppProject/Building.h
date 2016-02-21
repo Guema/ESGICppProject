@@ -59,6 +59,7 @@ protected:
 
 typedef Building * (__stdcall *CreateBuildingFgpn)(void);
 
+// Définition de Building1
 class Building1 : public Building
 {
 public:
@@ -82,6 +83,7 @@ public:
 	static Building * __stdcall Create() { return new Building1(); }
 };
 
+// Définition de Building2
 class Building2 : public Building
 {
 public:
@@ -105,6 +107,7 @@ public:
 	static Building * __stdcall Create() { return new Building2(); }
 };
 
+// Définition de Building3
 class Building3 : public Building
 {
 public:
@@ -127,3 +130,5 @@ public:
 
 	static Building * __stdcall Create() { return new Building3(); }
 };
+
+/* Possible d'ajouter d'autres types de batiment */

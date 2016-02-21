@@ -1,10 +1,13 @@
 #include "Unit.h"
 
+// Calculer le cout d'amélioration pour le niveau prochain
 int Unit::nextUpdateCost()
 {
 	return (int)(cost*(1 + costUpdateRate));
 }
 
+// Améliorer l'unité au niveau prochain
+// Retourner le cout pour l'amélioration
 int Unit::levelUp()
 {
 	attack = (int)(attack*(1 + attackUpdateRate));

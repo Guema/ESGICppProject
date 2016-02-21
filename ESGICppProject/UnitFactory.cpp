@@ -1,6 +1,7 @@
 #include "UnitFactory.h"
 
-/* Unit factory constructor.
+/* 
+Unit factory constructor.
 Register the types of Units here.
 */
 UnitFactory::UnitFactory()
@@ -10,11 +11,13 @@ UnitFactory::UnitFactory()
 	Register("Unit3", &Unit3::Create);
 }
 
+// Définition de la map
 void UnitFactory::Register(const string &UnitName, CreateUnitFgpn pfnCreate)
 {
 	m_FactoryMap[UnitName] = pfnCreate;
 }
 
+// Instancier une nouvelle unité à partir de son nom
 Unit *UnitFactory::build(const string &unitName)
 {
 	FactoryMap::iterator it = m_FactoryMap.find(unitName);
@@ -23,6 +26,7 @@ Unit *UnitFactory::build(const string &unitName)
 	return nullptr;
 }
 
+// Créer une unité et l'améliorer au nom et niveau saisis
 Unit* UnitFactory::readNextUnit(istream& stream)
 {
 	string name;
@@ -40,6 +44,7 @@ Unit* UnitFactory::readNextUnit(istream& stream)
 	return u;
 }
 
+// Retourner la liste des noms des unités
 vector<string> UnitFactory::UnitNameList()
 {	
 	vector<string> uList;
