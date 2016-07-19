@@ -8,11 +8,12 @@ using namespace std;
 
 class Building
 {
-public:	
+public:
 	Building() {}
 	// Fonctions principales
 	int nextUpdateCost();
 	int levelUp();
+	void setMode();
 
 	friend ostream& operator<<(ostream& os, const Building & bd);
 
@@ -30,7 +31,8 @@ public:
 	Zone getZone() const { return zone; }
 	int getX() const { return zone.getX(); }
 	int getY() const { return zone.getY(); }
-	
+	int getType() const { return this->type; }
+
 	// Setters	
 	void setName(string nom) { name = nom; }
 	void setCost(int cout) { cost = cout; }
@@ -43,7 +45,7 @@ public:
 	void setZone(Zone z) { zone = z; }
 	void setX(int x) { zone.setX(x); }
 	void setY(int y) { zone.setY(y); }
-	
+
 protected:
 	string name;
 	int maxInstances;
@@ -52,21 +54,26 @@ protected:
 	int height;
 	int hp;
 	int level;
+	int range = 0;
 	float healthUpdateRate;
 	float costUpdateRate;
 	Zone zone;
+	// 0 = QG, 1 = offensif, 2 = réparation
+	int type;
+	//0 = pas attaquante, 1 = attaque le plus proche, 2 = attaque le plus faible, 3 = attaque le plus loin
+	int mode = 0;
 };
 
 typedef Building * (__stdcall *CreateBuildingFgpn)(void);
 
 // Définition de Building1
-class Building1 : public Building
+class QG : public Building
 {
 public:
-	Building1() { setDefaultParameters(); }
+	QG() { setDefaultParameters(); }
 	void setDefaultParameters()
 	{
-		name = "Building1";
+		name = "QG";
 		maxInstances = 1;
 		cost = 1000;
 		width = 1;
@@ -76,45 +83,48 @@ public:
 		healthUpdateRate = 0.2f;
 		costUpdateRate = 0.1f;
 		zone = Zone(0, 0, width, height);
+		type = 0;
 	}
-	
+
 	void Free() { delete this; }
 
-	static Building * __stdcall Create() { return new Building1(); }
+	static Building * __stdcall Create() { return new QG(); }
 };
 
 // Définition de Building2
-class Building2 : public Building
+class FlameThrower : public Building
 {
 public:
-	Building2() { setDefaultParameters(); }
+	FlameThrower() { setDefaultParameters(); }
 	void setDefaultParameters()
 	{
-		name = "Building2";
+		name = "Lance-flamme";
 		maxInstances = 2;
 		cost = 2000;
 		width = 2;
 		height = 2;
 		hp = 2000;
+		range = 2;
 		level = 0;
 		healthUpdateRate = 0.2f;
 		costUpdateRate = 0.1f;
 		zone = Zone(0, 0, width, height);
+		type = 1;
 	}
 
 	void Free() { delete this; }
 
-	static Building * __stdcall Create() { return new Building2(); }
+	static Building * __stdcall Create() { return new FlameThrower(); }
 };
 
 // Définition de Building3
-class Building3 : public Building
+class Gatling : public Building
 {
 public:
-	Building3() { setDefaultParameters(); }
+	Gatling() { setDefaultParameters(); }
 	void setDefaultParameters()
 	{
-		name = "Building3";
+		name = "Mitrailleuse";
 		maxInstances = 3;
 		cost = 3000;
 		width = 2;
@@ -124,11 +134,137 @@ public:
 		healthUpdateRate = 0.2f;
 		costUpdateRate = 0.1f;
 		zone = Zone(0, 0, width, height);
+		type = 1;
 	}
 
 	void Free() { delete this; }
 
-	static Building * __stdcall Create() { return new Building3(); }
+		static Building * __stdcall Create() { return new Gatling(); }
+};
+
+// Définition de Building1
+class Canon : public Building
+{
+public:
+	Canon() { setDefaultParameters(); }
+	void setDefaultParameters()
+	{
+		name = "Canon";
+		maxInstances = 1;
+		cost = 1000;
+		width = 1;
+		height = 1;
+		hp = 1000;
+		level = 0;
+		healthUpdateRate = 0.2f;
+		costUpdateRate = 0.1f;
+		zone = Zone(0, 0, width, height);
+		type = 1;
+	}
+
+	void Free() { delete this; }
+
+	static Building * __stdcall Create() { return new Canon(); }
+};
+
+// Définition de Building2
+class SniperTower : public Building
+{
+public:
+	SniperTower() { setDefaultParameters(); }
+	void setDefaultParameters()
+	{
+		name = "Tour de sniper";
+		maxInstances = 2;
+		cost = 2000;
+		width = 2;
+		height = 2;
+		hp = 2000;
+		level = 0;
+		healthUpdateRate = 0.2f;
+		costUpdateRate = 0.1f;
+		zone = Zone(0, 0, width, height);
+		type = 1;
+	}
+
+	void Free() { delete this; }
+
+	static Building * __stdcall Create() { return new SniperTower(); }
+};
+
+// Définition de Building3
+class RepairBuilding : public Building
+{
+public:
+	RepairBuilding() { setDefaultParameters(); }
+	void setDefaultParameters()
+	{
+		name = "Bâtiment de réparation";
+		maxInstances = 3;
+		cost = 3000;
+		width = 2;
+		height = 3;
+		hp = 3000;
+		level = 0;
+		healthUpdateRate = 0.2f;
+		costUpdateRate = 0.1f;
+		zone = Zone(0, 0, width, height);
+		type = 2;
+	}
+
+	void Free() { delete this; }
+
+	static Building * __stdcall Create() { return new RepairBuilding(); }
+};
+
+// Définition de Building1
+class ShieldGenerator : public Building
+{
+public:
+	ShieldGenerator() { setDefaultParameters(); }
+	void setDefaultParameters()
+	{
+		name = "Générateur de bouclier";
+		maxInstances = 1;
+		cost = 1000;
+		width = 1;
+		height = 1;
+		hp = 1000;
+		level = 0;
+		healthUpdateRate = 0.2f;
+		costUpdateRate = 0.1f;
+		zone = Zone(0, 0, width, height);
+		type = 2;
+	}
+
+	void Free() { delete this; }
+
+	static Building * __stdcall Create() { return new ShieldGenerator(); }
+};
+
+// Définition de Building2
+class EnergyGenerator : public Building
+{
+public:
+	EnergyGenerator() { setDefaultParameters(); }
+	void setDefaultParameters()
+	{
+		name = "Générateur d'énergie";
+		maxInstances = 2;
+		cost = 2000;
+		width = 2;
+		height = 2;
+		hp = 2000;
+		level = 0;
+		healthUpdateRate = 0.2f;
+		costUpdateRate = 0.1f;
+		zone = Zone(0, 0, width, height);
+		type = 2;
+	}
+
+	void Free() { delete this; }
+
+	static Building * __stdcall Create() { return new EnergyGenerator(); }
 };
 
 /* Possible d'ajouter d'autres types de batiment */

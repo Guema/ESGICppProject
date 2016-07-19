@@ -6,10 +6,15 @@ Register the types of buildings here.
 */
 BuildingFactory::BuildingFactory()
 {
-	;
-	Register("Building1", &Building1::Create);
-	Register("Building2", &Building2::Create);
-	Register("Building3", &Building3::Create);
+	
+	Register("QG", &QG::Create);
+	Register("Lance-Flamme", &FlameThrower::Create);
+	Register("Mittrailleuse", &Gatling::Create);
+	Register("Canon", &Canon::Create);
+	Register("Tour de sniper", &SniperTower::Create);
+	Register("Générateur d'energie", &EnergyGenerator::Create);
+	Register("Générateur de bouclier", &ShieldGenerator::Create);
+	Register("Bâtiment de réparation", &RepairBuilding::Create);
 }
 
 // Définition de la map

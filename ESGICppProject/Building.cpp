@@ -3,7 +3,7 @@
 // Calculer le cout d'amélioration pour le niveau prochain
 int Building::nextUpdateCost()
 {
-	return (int)(cost*(1+costUpdateRate));
+	return (int)(cost*(1 + costUpdateRate));
 }
 
 // Améliorer le batiment au niveau prochain
@@ -15,6 +15,11 @@ int Building::levelUp()
 	cost += updateCost;
 	level++;
 	return updateCost;
+}
+
+
+	void Building::setMode()
+{
 }
 
 // Surchargeur d'écriture pour un batiment

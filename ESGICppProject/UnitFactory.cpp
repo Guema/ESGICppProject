@@ -1,14 +1,19 @@
 #include "UnitFactory.h"
 
-/* 
+/*
 Unit factory constructor.
 Register the types of Units here.
 */
 UnitFactory::UnitFactory()
-{	
-	Register("Unit1", &Unit1::Create);
-	Register("Unit2", &Unit2::Create);
-	Register("Unit3", &Unit3::Create);
+{
+	Register("Kamikaze", &Kamikaze::Create);
+	Register("Brute", &Brute::Create);
+	Register("Fusilleur", &Fusilleur::Create);
+	Register("Sniper", &Sniper::Create);
+	Register("Bazooka", &Bazooka::Create);
+	Register("Médecin de contact", &Contact_Medic::Create);
+	Register("Médecin Seringue", &Needle_Medic::Create);
+	Register("Médecin de zone", &AOE_Medic::Create);
 }
 
 // Définition de la map
@@ -39,14 +44,14 @@ Unit* UnitFactory::readNextUnit(istream& stream)
 	{
 		u->setLevel(0);
 		for (int i = 0; i < lvl; i++)
-			u->levelUp();		
+			u->levelUp();
 	}
 	return u;
 }
 
 // Retourner la liste des noms des unités
 vector<string> UnitFactory::UnitNameList()
-{	
+{
 	vector<string> uList;
 	FactoryMap::iterator it, end = m_FactoryMap.end();
 	for (it = m_FactoryMap.begin(); it != end; it++)
