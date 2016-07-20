@@ -66,7 +66,7 @@ bool Base::AddBuilding(string name, int x, int y)
 	Building *pBuilding = BuildingFactory::Get()->build(name);
 
 	//véifie que le bâtiment existe bien dans la liste des bâtiments définis
-	if (pBuilding)
+	if ((pBuilding && this->hq != nullptr) || pBuilding->getType() == 0)
 	{
 		Zone z(x, y, pBuilding->getWidth(), pBuilding->getHeight(), idCount);
 		if (field.isEmpty(z))
@@ -77,13 +77,14 @@ bool Base::AddBuilding(string name, int x, int y)
 			idCount++;
 			gold -= pBuilding->getCost();
 			cout << "ADD ok" << endl;
+			this->hq->setHP(this->hq->getHP() + (pBuilding->getHP()*0.1));
 			return true;
 		}
 		else
 			cout << "ERREUR: la zone choisie n'est pas vide pour construire!" << endl;
 	}
 	else
-		cout << "ERREUR: le nom choisi n'est pas un nom du batiment valide!" << endl;		
+		cout << "ERREUR: le nom choisi n'est pas un nom du batiment valide ou vous n'avez pas encore construit de QG!" << endl;		
 	return false;
 }
 

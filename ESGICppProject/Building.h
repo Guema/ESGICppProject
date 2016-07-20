@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include "Zone.h"
+#include "Unit.h"
 
 using namespace std;
 
@@ -13,7 +14,12 @@ public:
 	// Fonctions principales
 	int nextUpdateCost();
 	int levelUp();
-	void setMode();
+	void setMode(int mo);
+	void attackUnit(Unit * un);
+	Unit* detect();
+	void supportEnergy(Building* build);
+	void supportShield(Building* build);
+	void repairBuilding(Building* build);
 
 	friend ostream& operator<<(ostream& os, const Building & bd);
 
@@ -32,6 +38,7 @@ public:
 	int getX() const { return zone.getX(); }
 	int getY() const { return zone.getY(); }
 	int getType() const { return this->type; }
+	int getFireRate() const { return this->firerate; }
 
 	// Setters	
 	void setName(string nom) { name = nom; }
@@ -40,6 +47,7 @@ public:
 	void setHeight(int h) { height = h; }
 	void setHP(int pv) { hp = pv; }
 	void setLevel(int lvl) { level = lvl; }
+	void setFireRate(int spd) { firerate = spd; }
 	void setHPUpdateRate(float hpRate) { healthUpdateRate = hpRate; }
 	void setCostUpdateRate(float costRate) { costUpdateRate = costRate; }
 	void setZone(Zone z) { zone = z; }
@@ -54,6 +62,9 @@ protected:
 	int height;
 	int hp;
 	int level;
+	int attack = 0;
+	int repair = 0;
+	int firerate;
 	int range = 0;
 	float healthUpdateRate;
 	float costUpdateRate;
@@ -62,6 +73,7 @@ protected:
 	int type;
 	//0 = pas attaquante, 1 = attaque le plus proche, 2 = attaque le plus faible, 3 = attaque le plus loin
 	int mode = 0;
+	bool area_action = false;
 };
 
 typedef Building * (__stdcall *CreateBuildingFgpn)(void);
@@ -103,13 +115,16 @@ public:
 		cost = 2000;
 		width = 2;
 		height = 2;
-		hp = 2000;
+		hp = 1500;
+		attack = 20;
+		firerate = 999;
 		range = 2;
 		level = 0;
 		healthUpdateRate = 0.2f;
 		costUpdateRate = 0.1f;
 		zone = Zone(0, 0, width, height);
 		type = 1;
+		area_action = true;
 	}
 
 	void Free() { delete this; }
@@ -126,10 +141,13 @@ public:
 	{
 		name = "Mitrailleuse";
 		maxInstances = 3;
-		cost = 3000;
+		cost = 2000;
 		width = 2;
 		height = 3;
-		hp = 3000;
+		hp = 2500;
+		attack = 40;
+		firerate = 10;
+		range = 5;
 		level = 0;
 		healthUpdateRate = 0.2f;
 		costUpdateRate = 0.1f;
@@ -150,16 +168,20 @@ public:
 	void setDefaultParameters()
 	{
 		name = "Canon";
-		maxInstances = 1;
-		cost = 1000;
+		maxInstances = 2;
+		cost = 2000;
 		width = 1;
 		height = 1;
-		hp = 1000;
+		hp = 2000;
+		attack = 150;
+		firerate = 2;
+		range = 5;
 		level = 0;
 		healthUpdateRate = 0.2f;
 		costUpdateRate = 0.1f;
 		zone = Zone(0, 0, width, height);
 		type = 1;
+		area_action = true;
 	}
 
 	void Free() { delete this; }
@@ -179,7 +201,10 @@ public:
 		cost = 2000;
 		width = 2;
 		height = 2;
-		hp = 2000;
+		hp = 1500;
+		attack = 100;
+		firerate = 4;
+		range = 8;
 		level = 0;
 		healthUpdateRate = 0.2f;
 		costUpdateRate = 0.1f;
@@ -200,16 +225,19 @@ public:
 	void setDefaultParameters()
 	{
 		name = "Bâtiment de réparation";
-		maxInstances = 3;
+		maxInstances = 1;
 		cost = 3000;
 		width = 2;
 		height = 3;
-		hp = 3000;
+		hp = 1000;
+		firerate = 1;
+		range = 5;
 		level = 0;
 		healthUpdateRate = 0.2f;
 		costUpdateRate = 0.1f;
 		zone = Zone(0, 0, width, height);
 		type = 2;
+		repair = 40;
 	}
 
 	void Free() { delete this; }
@@ -230,6 +258,7 @@ public:
 		width = 1;
 		height = 1;
 		hp = 1000;
+		range = 5;
 		level = 0;
 		healthUpdateRate = 0.2f;
 		costUpdateRate = 0.1f;
@@ -255,6 +284,7 @@ public:
 		width = 2;
 		height = 2;
 		hp = 2000;
+		range = 5;
 		level = 0;
 		healthUpdateRate = 0.2f;
 		costUpdateRate = 0.1f;

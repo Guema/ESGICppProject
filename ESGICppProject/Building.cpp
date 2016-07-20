@@ -18,8 +18,39 @@ int Building::levelUp()
 }
 
 
-	void Building::setMode()
+void Building::setMode(int mo)
 {
+	this->mode = mo;
+}
+
+void Building::attackUnit(Unit * un)
+{
+	un->setHP(un->getHP() - this->attack);
+}
+
+Unit * Building::detect()
+{
+	Unit * unit;
+	while (true)
+	{
+
+	}
+	return nullptr;
+}
+
+void Building::supportEnergy(Building * build)
+{
+	build->setFireRate(build->getFireRate() + 10);
+}
+
+void Building::supportShield(Building * build)
+{
+	build->setHP(build->getHP() + 1000);
+}
+
+void Building::repairBuilding(Building * build)
+{
+	build->setHP(build->getHP() + this->repair);
 }
 
 // Surchargeur d'écriture pour un batiment

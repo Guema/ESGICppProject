@@ -32,10 +32,12 @@ public:
 	BaseMap getBuildingList();	
 	int getGold() const { return gold; }
 	void setGold(int gold) { this->gold = gold; }
+	void setHQ(QG* qg) { this->hq = qg; }
 
 private:	
 	Field field;
 	int gold;
 	int idCount;
 	BaseMap buildingList;
+	QG* hq = nullptr;
 };
